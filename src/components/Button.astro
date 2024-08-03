@@ -1,0 +1,22 @@
+---
+const styles = {
+  PRIMARY: 'font-bold text-almost-white hover:text-almost-black border-almost-black bg-almost-black hover:bg-almost-white',
+  LIGHT: 'text-medium-gray hover:text-almost-black border-transparent',
+  OUTLINE: 'text-medium-gray hover:text-almost-black border-medium-gray hover:border-almost-black'
+} as const
+
+interface Props {
+  type: keyof typeof styles
+  class?: string
+}
+
+const { type, class: className } = Astro.props
+---
+
+<button class={`
+  py-2.5 px-6 border-2 text-sm rounded-xl 
+  ${styles[type]} 
+  ${(className !== undefined) && className}
+`}>
+  <slot />
+</button>

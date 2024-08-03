@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets'
+import type { NavItem } from '../types'
+import iconArrowDown from '../assets/images/icon-arrow-down.svg'
+
+type Props = NavItem
+
+const { name, items, shortName } = Astro.props
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*')
+---
+
+<nav-item class="md:[&_[data-body]]:odd:right-0 md:[&_[data-body]]:even:left-0">
+  <li class="md:relative">
+    {items 
+      ? (
+        <button class="flex items-center gap-x-2 w-full py-2 hover:text-almost-black md:p-0" data-button>
+          <span>{name}</span>
+          <Image class="transition-transform" src={iconArrowDown} alt="Arrow down icon" data-arrow />
+        </button>
+        <div class="grid grid-rows-[0fr] transition-all md:absolute md:-bottom-5 md:w-max md:bg-almost-white md:rounded-xl md:shadow-2xl md:translate-y-full" data-body>
+          <div class="overflow-hidden">
+            <div class="py-3.5 pl-6 pr-0 md:p-6">
+              <ul class="flex flex-col gap-y-3.5">
+                {items.map(({ name, shortName, icon }) => {
+                  const imagePath = '/src/assets/images/' + icon
+                  if (icon !== undefined && !images[imagePath]) throw new Error(`"${imagePath} was not found."`);
+                  return (
+                    <li>
+                      <a class="flex items-center gap-x-4 hover:text-almost-black" href={"#" + shortName}>
+                        {(icon !== undefined) && <Image class="w-4" src={images[imagePath]()} alt={`${name} icon`} />}
+                        <span>{name}</span>
+                      </a>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ) 
+      : (
+        <a class="block w-full py-2 hover:text-almost-black md:p-0" href={"#" + shortName}>{name}</a>
+      )}
+  </li>
+</nav-item>
+
+<script>
+  class NavItem extends HTMLElement {
+    constructor() {
+      super()
+
+      const button = this.querySelector('[data-button]')
+      const body = this.querySelector('[data-body]')
+      const arrow = this.querySelector('[data-arrow]')
+      
+      if (
+        button instanceof HTMLButtonElement && 
+        body instanceof HTMLElement &&
+        arrow instanceof HTMLImageElement
+      ) {
+        button.addEventListener('click', () => {
+          body.classList.toggle('grid-rows-[1fr]')
+          arrow.classList.toggle('rotate-180')
+        })
+      }
+    }
+  }
+
+  customElements.define('nav-item', NavItem)
+</script>

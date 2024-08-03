@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets'
+import Button from './Button.astro'
+import imageHeroMobile from '../assets/images/image-hero-mobile.png'
+import imageHeroDesktop from '../assets/images/image-hero-desktop.png'
+
+const clients = ['databiz', 'audiophile', 'meet', 'maker']
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/client-*.svg')
+---
+
+<div class="sm:p-4">
+  <div class="flex flex-col gap-y-8 max-w-[1150px] mx-auto sm:flex-row-reverse sm:justify-between sm:gap-x-8 xl:translate-x-5">
+    <div class="sm:max-w-[480px]">
+      <picture>
+        <source media="(min-width: 640px)" srcset={imageHeroDesktop.src}>
+        <Image src={imageHeroMobile} alt="Hero image" 
+        />
+      </picture>
+    </div>
+    <div class="sm:max-w-[515px] md:pt-12 lg:pt-28">
+      <div class="flex flex-col gap-y-7 w-full max-w-xl mx-auto sm:max-w-none sm:h-full sm:justify-between sm:gap-y-6">
+        <div class="flex flex-col items-center gap-y-6 p-4 text-center sm:p-0 sm:items-start sm:text-start md:gap-y-8 xl:gap-y-12">
+          <h1 class="font-bold text-[2.2rem]/10 md:text-5xl lg:text-6xl xl:text-[4.85rem]">Make remote work</h1>
+          <p class="text-medium-gray lg:text-lg xl:max-w-[430px]">Get your team in sync, no matter your location. Streamline processes, create team rituals, and watch productivity soar.</p>
+          <Button class="lg:text-lg" type="PRIMARY">Learn more</Button>
+        </div>
+        <div class="flex justify-between items-center sm:max-w-[480px]">
+          {clients.map((client) => {
+            const imagePath = `/src/assets/images/client-${client}.svg`
+            if (!images[imagePath]) throw new Error(`"${imagePath}" was not found.`);
+            return (
+              <div>
+                <Image 
+                  class="scale-[.725] md:scale-[.8] lg:scale-100" 
+                  src={images[imagePath]()} 
+                  alt={`${client} logo`} 
+                />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

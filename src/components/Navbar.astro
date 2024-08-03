@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets'
+import Button from './Button.astro'
+import NavItem from './NavItem.astro'
+import type { NavItem as NavItemI } from '../types'
+import logo from '../assets/images/logo.svg'
+import iconMenu from '../assets/images/icon-menu.svg'
+import iconCloseMenu from '../assets/images/icon-close-menu.svg'
+
+const navItems: NavItemI[] = [
+  {
+    name: 'Features',
+    items: [
+      {
+        name: 'Todo List',
+        shortName: 'todo',
+        icon: 'icon-todo.svg'
+      },
+      {
+        name: 'Calendar',
+        shortName: 'calendar',
+        icon: 'icon-calendar.svg'
+      },
+      {
+        name: 'Reminders',
+        shortName: 'reminders',
+        icon: 'icon-reminders.svg'
+      },
+      {
+        name: 'Planning',
+        shortName: 'planning',
+        icon: 'icon-planning.svg'
+      }
+    ]
+  },
+  {
+    name: 'Company',
+    items: [
+      {
+        name: 'History',
+        shortName: 'history'
+      },
+      {
+        name: 'Our team',
+        shortName: 'team'
+      },
+      {
+        name: 'Blog',
+        shortName: 'blog'
+      }
+    ]
+  },
+  {
+    name: 'Careers',
+    shortName: 'careers'
+  },
+  {
+    name: 'About',
+    shortName: 'about'
+  }
+]
+---
+
+<header class="flex justify-between items-center py-6 px-4 md:gap-x-12 md:px-7 lg:gap-x-16 lg:px-10">
+  <a href="#">
+    <Image src={logo} alt="Snap logo" />
+  </a>
+  <div id="navbar" class="absolute top-0 left-0 z-50 size-full bg-almost-black bg-opacity-75 translate-x-full transition-transform md:static md:flex-grow md:translate-x-0">
+    <nav class="flex flex-col gap-y-5 w-2/3 max-w-sm h-full p-6 pr-5 ml-auto bg-almost-white overflow-y-scroll md:flex-row md:justify-between md:w-full md:max-w-none md:p-0 md:overflow-y-visible">
+      <div class="flex justify-end md:hidden">
+        <button class="navbar-button">
+          <Image src={iconCloseMenu} alt="Close menu icon" />
+        </button>
+      </div>
+      <div class="md:flex md:items-center">
+        <ul class="text-medium-gray md:flex md:text-sm md:gap-x-5 lg:gap-x-10">
+          {navItems.map((navItem) => (
+            <NavItem {...navItem} />
+          ))}
+        </ul>
+      </div>
+      <div class="flex flex-col md:flex-row md:items-center md:gap-x-4">
+        <Button type="LIGHT">Login</Button>
+        <Button type="OUTLINE">Register</Button>
+      </div>
+    </nav>
+  </div>
+  <button class="navbar-button md:hidden">
+    <Image src={iconMenu} alt="Menu icon" />
+  </button>
+</header>
+
+<script>
+  const navbar = document.querySelector('#navbar')
+  const navbarButtons = document.querySelectorAll('.navbar-button')
+
+  if (navbar instanceof HTMLElement) {
+    navbarButtons.forEach((elm) => {
+      if (elm instanceof HTMLButtonElement) {
+        elm.addEventListener('click', () => navbar.classList.toggle('translate-x-full'))
+      }
+    })
+  }
+</script>
